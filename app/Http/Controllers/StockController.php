@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StockCategory;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class StockCategoryController extends Controller
+class StockController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,11 +14,13 @@ class StockCategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $stock_categories = StockCategory::all();
-        return Inertia::render('StockCategories/Index',
-            ['stock_categories' => $stock_categories]);
-    }
+    
+        {
+            $stocks = Stock::all();
+            return Inertia::render('Stocks/index',
+            ['stocks'=>$stocks]);
+        }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -27,7 +29,7 @@ class StockCategoryController extends Controller
      */
     public function create()
     {
-        return Inertia::render('StockCategories/Create');
+        return Inertia::render('Stocks/Create');
     }
 
     /**
@@ -41,25 +43,27 @@ class StockCategoryController extends Controller
         $validate = $request->validate(
 
             [
-                'id' => 'required|numeric|unique:stock_categories',
+                'id' => 'required|numeric|unique:stocks' ,
                 'description' => 'required',
-                'type' => 'required',
-                'stock_account' => 'nullable',
-
+                'stock_category_id'  => 'nullable',
+                'uom' => 'required' ,
+                'barcode' => 'required',
+                'discontinued' => 'required' ,
+                'photo_path'=> 'nullable',
             ]
-
         );
-
-        $model = new StockCategory();
+        $model = new Stock();
         $model->id = $request->id;
         $model->description = $request->description;
-        $model->type = $request->type;
-        $model->stock_account = $request->stock_account;
+        $model->stock_category_id = $request->stock_category_id;
+        $model->uom = $request->uom;
+        $model->barcode = $request->barcode;
+        $model->discontinued = $request->discontinued;
+        $model->photo_path = $request->photo_path;
 
         $model->save();
 
-        return redirect()->back()->with('success', 'New Stock Category Added!');
-
+        return redirect()->back()->with('success', 'New Added!');
     }
 
     /**
